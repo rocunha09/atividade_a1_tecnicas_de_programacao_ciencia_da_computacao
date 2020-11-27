@@ -1,5 +1,5 @@
 # atividade_a1_tecnicas_de_programacao_ciencia_da_computacao
- atividade A1 da disciplina Técnicas de Programação do curso de Ciência da Computação(UAM)
+ Atividade A1 da disciplina Técnicas de Programação do curso de Ciência da Computação(UAM)
 
  Enunciado da atividade: (20/11/2020)
 
@@ -22,4 +22,7 @@ O sistema deverá oferecer, ao usuário, as seguintes funcionalidades:
 
 O sistema deverá armazenar os veículos ordenados pelo ano de fabricação, ou seja, ao inserir um novo veículo, este deve ser inserido em ordem crescente de ano de fabricação.
 
+
+Obs.: Como pode-se observar no arquivo main.c o desenvolvimento se deu todo em um único arquivo, usando método básico de desenvolvimento, o motivo para tal é que a atividade dever ser postada na plataforma através de um único arquivo de texto, além disso as técnicas ensinadas são básicas, o código atual já contem implementações realizadas com uso de técncias descobertas durante pesquisas.
+-veja o arquivo "técnicas de programação módulo 1.pdf"
 

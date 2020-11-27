@@ -24,8 +24,8 @@ char recebe_option;
 int option = 0;
 const TOT_VEICULOS = 3;             //total de veículos que podem ser cadastrados
 
-int tot_veiculos = 3;               //total de veículos que podem ser cadastrados usado para calculos
-int vagas_livres = 3;               //baseado no total de vagas e usado para calculos no cadastro e impressao de lista
+int tot_veiculos = TOT_VEICULOS;               //total de veículos que podem ser cadastrados usado para calculos
+int vagas_livres = TOT_VEICULOS;               //baseado no total de vagas e usado para calculos no cadastro e impressao de lista
 int vaga_ocupada = 0;               //usado para calculos no cadastro
 int nova_lista = 0;					//define tamanho de lista a ser impressa
 
@@ -170,6 +170,15 @@ void voltar_ao_menu(aceitar){
     }
 }
 
+void calcular_vagas_livres(){
+    //calculo para saber o total de vagas livres para cadastro
+    for(int i = 0; i<TOT_VEICULOS;i++){
+        if (veiculo[i].ano_fabricacao != vaga_ocupada){
+            vagas_livres--;
+        }
+    }
+}
+
 void cadastrar(){
     printf("DESEJA REALIZAR CADASTRO? \t \t  DIGITE 1 PARA SIM E 0 PARA NAO.\n");
     scanf("%d", &aceitar);
@@ -179,12 +188,7 @@ void cadastrar(){
         voltar_ao_menu(aceitar);
 
     } else if( aceitar == SIM) {
-       //calculo para saber o total de vagas livres para cadastro
-        for(int i = 0; i<tot_veiculos;i++){
-            if (veiculo[i].ano_fabricacao != vaga_ocupada){
-               vagas_livres--;
-            }
-        }
+       calcular_vagas_livres();
 
         //mensagem de quando todas vagas estiverem ocupadas...
         if(vagas_livres == 0){
@@ -201,11 +205,11 @@ void cadastrar(){
             //calcula a posicao a receber os dados com base o no  calculo de vagas livres:
             int posicao_de_cadastro = 0;
 
-            if(tot_veiculos == vagas_livres){
+            if(TOT_VEICULOS == vagas_livres){
                 posicao_de_cadastro = 0; //guarda na primeira posicao
             } else {
                 //calcula posicao vazia
-                posicao_de_cadastro = tot_veiculos - vagas_livres;
+                posicao_de_cadastro = TOT_VEICULOS - vagas_livres;
             }
 
 
@@ -217,15 +221,15 @@ void cadastrar(){
                         printf("digite a marca do veiculo\n");
                         scanf("%s", &veiculo[posicao_de_cadastro].marca);
                         break;
-                case 2:
+                    case 2:
                         printf("digite a modelo do veiculo\n");
                         scanf("%s", &veiculo[posicao_de_cadastro].modelo);
                         break;
-                case 3:
+                    case 3:
                     printf("digite a ano do veiculo -- formato: aaaa --\n");
                         scanf("%d", &veiculo[posicao_de_cadastro].ano_fabricacao);
                         break;
-                case 4:
+                    case 4:
                         printf("digite a placa do veiculo -- formato: xxx-yyyy --\n");
                         scanf("%s", &veiculo[posicao_de_cadastro].placa);
                         break;
@@ -270,7 +274,8 @@ void ordenar_veiculos(){
 }
 */
 void imprime_veiculo(int i){
-    printf("--------------------\n");
+    printf("\n");
+    printf("---------[%d]--------\n", i);
     printf("marca       %s   \n", veiculo[i].marca);
     printf("modelo:     %s   \n", veiculo[i].modelo);
     printf("ano:        %d   \n", veiculo[i].ano_fabricacao);
@@ -279,33 +284,31 @@ void imprime_veiculo(int i){
 
 }
 
+void listar_veiculo(){
+   for(int i = 0; i < TOT_VEICULOS; i++){
+        if(veiculo[i].ano_fabricacao != 0){ //diferente de zero pois zero indica que nenhum foi cadastrado.
+            imprime_veiculo(i);
+        }
+    }
+    
+}
+
 void imprime_lista_veiculo(){
-	int i;
-	
-	if(vagas_livres == TOT_VEICULOS){
+    calcular_vagas_livres();
+        	
+	if(vagas_livres == TOT_VEICULOS){ //ou seja: nao ha veiculos cadastrados
         printf("\n-------------------------------------------\n");
         printf("-------TODAS AS VAGAS ESTAO LIVRES---------\n");
         printf("-------------------------------------------\n");
         printf("\n");
-        cadastrar();
+        voltar_ao_menu(aceitar);
+    
     } else {
-		for(i = 0; i < TOT_VEICULOS; i++){
-			if(veiculo[i].ano_fabricacao != 0){
-				nova_lista++;
-			}
-		}
-	}
+        listar_veiculo();
+        voltar_ao_menu(aceitar);
 	
-	if(nova_lista < TOT_VEICULOS){
-		for(i = 0; i < nova_lista; i++){
-			printf("\n");
-			imprime_veiculo(i);
-			printf("\n");
-		}
-		cadastrar();
-	}		
+    } 
 
-    voltar_ao_menu(aceitar);
 }
 
 void imprime_lista_veiculo_ano(){
@@ -320,10 +323,11 @@ void imprime_lista_veiculo_ano(){
         printf("\n");
         cadastrar();
     } else {
+        printf("\n VEICULOS DISPONIVEIS PARA LISTAR\n");
         for(i = 0; i < TOT_VEICULOS; i++){
             if(veiculo[i].ano_fabricacao != 0){
 				printf("\n");
-				printf("[%d] - ano: %d   \n", i, veiculo[i].ano_fabricacao);
+				printf("- ano: %d   \n", veiculo[i].ano_fabricacao);
 				nova_lista++;
 			}			
         }
@@ -338,8 +342,7 @@ void imprime_lista_veiculo_ano(){
                 printf("\n");
             }
         }
-        voltar_ao_menu(aceitar);
+        voltar_ao_menu(aceitar); //teste
     }
 
 }
-
