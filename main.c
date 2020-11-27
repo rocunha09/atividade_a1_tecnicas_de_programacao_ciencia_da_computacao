@@ -25,8 +25,7 @@ int option = 0;
 const TOT_VEICULOS = 3;             //total de veículos que podem ser cadastrados
 
 int tot_veiculos = TOT_VEICULOS;               //total de veículos que podem ser cadastrados usado para calculos
-int vagas_livres = TOT_VEICULOS;               //baseado no total de vagas e usado para calculos no cadastro e impressao de lista
-int vaga_ocupada = 0;               //usado para calculos no cadastro
+int vagas_livres = 3;               //baseado no total de vagas e usado para no cadastro e impressao de listacalculos 
 int nova_lista = 0;					//define tamanho de lista a ser impressa
 
 //veiculo
@@ -170,15 +169,6 @@ void voltar_ao_menu(aceitar){
     }
 }
 
-void calcular_vagas_livres(){
-    //calculo para saber o total de vagas livres para cadastro
-    for(int i = 0; i<TOT_VEICULOS;i++){
-        if (veiculo[i].ano_fabricacao != vaga_ocupada){
-            vagas_livres--;
-        }
-    }
-}
-
 void cadastrar(){
     printf("DESEJA REALIZAR CADASTRO? \t \t  DIGITE 1 PARA SIM E 0 PARA NAO.\n");
     scanf("%d", &aceitar);
@@ -188,8 +178,6 @@ void cadastrar(){
         voltar_ao_menu(aceitar);
 
     } else if( aceitar == SIM) {
-       calcular_vagas_livres();
-
         //mensagem de quando todas vagas estiverem ocupadas...
         if(vagas_livres == 0){
             printf("\n-------------------------------------------\n");
@@ -212,8 +200,6 @@ void cadastrar(){
                 posicao_de_cadastro = TOT_VEICULOS - vagas_livres;
             }
 
-
-
             //inicia cadastro de um veiculo
             for(int i = 0; i <= 4; i++){ //percorre os 4 atributos de veiculo
                 switch(i){
@@ -235,8 +221,12 @@ void cadastrar(){
                         break;
                 }
             }
+            vagas_livres--; //diminui uma vaga pois houve cadastro
+            printf("\n\n ha %d vagas livres para cadastro\n", vagas_livres);
+
             printf("\n\nveiculo cadastrado: \n");
             imprime_veiculo(posicao_de_cadastro);
+            
             //ordenar_veiculos();
 
             voltar_ao_menu(aceitar);
@@ -282,6 +272,7 @@ void imprime_veiculo(int i){
     printf("placa:      %s   \n", veiculo[i].placa);
     printf("--------------------\n");
 
+
 }
 
 void listar_veiculo(){
@@ -294,9 +285,7 @@ void listar_veiculo(){
 }
 
 void imprime_lista_veiculo(){
-    calcular_vagas_livres();
-        	
-	if(vagas_livres == TOT_VEICULOS){ //ou seja: nao ha veiculos cadastrados
+    if(vagas_livres == TOT_VEICULOS){ //ou seja: nao ha veiculos cadastrados
         printf("\n-------------------------------------------\n");
         printf("-------TODAS AS VAGAS ESTAO LIVRES---------\n");
         printf("-------------------------------------------\n");
