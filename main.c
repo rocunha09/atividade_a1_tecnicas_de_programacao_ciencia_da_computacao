@@ -24,9 +24,10 @@ char recebe_option;
 int option = 0;
 const TOT_VEICULOS = 3;             //total de veículos que podem ser cadastrados
 
-int tot_veiculos = TOT_VEICULOS;               //total de veículos que podem ser cadastrados usado para calculos
+int tot_veiculos = TOT_VEICULOS;    //total de veículos que podem ser cadastrados usado para calculos
 int vagas_livres = 3;               //baseado no total de vagas e usado para no cadastro e impressao de listacalculos 
-int nova_lista = 0;					//define tamanho de lista a ser impressa
+int ano;                            //usado para comparacao nas funcoes de listagem
+int modelo;                            //usado para comparacao nas funcoes de listagem
 
 //veiculo
 typedef struct{
@@ -74,15 +75,17 @@ int main(){
             case 3:
                 system("cls");
                 printf("-3---listar veiculos---ano--\n");
-                imprime_lista_veiculo_ano();
+                imprime_lista_veiculo_ano(1); //tipo 1 verifica se e igual
                 break;
             case 4:
                 system("cls");
                 printf("-4---listar veiculos->-ano--\n");
+                imprime_lista_veiculo_ano(2); //tipo 2 veifica se e maior
                 break;
             case 5:
                 system("cls");
                 printf("-5---listar veiculos-modelo-\n");
+                imprime_lista_veiculo_modelo();
                 break;
             case 100:
                 system("cls");
@@ -222,7 +225,7 @@ void cadastrar(){
                 }
             }
             vagas_livres--; //diminui uma vaga pois houve cadastro
-            printf("\n\n ha %d vagas livres para cadastro\n", vagas_livres);
+            //printf("\n\n ha %d vagas livres para cadastro\n", vagas_livres);
 
             printf("\n\nveiculo cadastrado: \n");
             imprime_veiculo(posicao_de_cadastro);
@@ -275,8 +278,8 @@ void imprime_veiculo(int i){
 
 }
 
-void listar_veiculo(){
-   for(int i = 0; i < TOT_VEICULOS; i++){
+void listar_veiculo(int nova_lista){
+   for(int i = 0; i < nova_lista; i++){
         if(veiculo[i].ano_fabricacao != 0){ //diferente de zero pois zero indica que nenhum foi cadastrado.
             imprime_veiculo(i);
         }
@@ -293,45 +296,102 @@ void imprime_lista_veiculo(){
         voltar_ao_menu(aceitar);
     
     } else {
-        listar_veiculo();
+        listar_veiculo(TOT_VEICULOS); //passa TOT_VEICULOS como parâmetro para função pois a lista é baseada na lista original, checando apenas se o índice a ser impresso possui dados ou não.
         voltar_ao_menu(aceitar);
 	
     } 
 
 }
 
-void imprime_lista_veiculo_ano(){
+void imprime_lista_veiculo_ano(int tipo){
     int i = 0;
-	int ano;
-	
+    int count = 0;
 	
     if(vagas_livres == TOT_VEICULOS){
         printf("\n-------------------------------------------\n");
         printf("-------TODAS AS VAGAS ESTAO LIVRES---------\n");
         printf("-------------------------------------------\n");
         printf("\n");
-        cadastrar();
+        voltar_ao_menu(aceitar); //teste
     } else {
+       
+       //mostra o ano de cada veículo para que o usuario possa escolher qual ano desejado...
         printf("\n VEICULOS DISPONIVEIS PARA LISTAR\n");
-        for(i = 0; i < TOT_VEICULOS; i++){
-            if(veiculo[i].ano_fabricacao != 0){
-				printf("\n");
-				printf("- ano: %d   \n", veiculo[i].ano_fabricacao);
-				nova_lista++;
-			}			
-        }
-
-        printf("\ndigite a ano do veiculo -- formato: aaaa --\n");
-        scanf("%d", ano);
-
-        for(i = 0; i < nova_lista; i++){
-            if (ano == veiculo[i].ano_fabricacao && veiculo[i].ano_fabricacao != 0){
-                printf("\n");
-                imprime_veiculo(i);
-                printf("\n");
+        printf("|");
+        for(int i = 0; i < TOT_VEICULOS; i++){
+            if(veiculo[i].ano_fabricacao != 0){ //diferente de zero pois zero indica que nenhum foi cadastrado.
+                printf("  %d  |", veiculo[i].ano_fabricacao);
             }
         }
-        voltar_ao_menu(aceitar); //teste
-    }
+        printf("\n");
 
+        printf("\ndigite o ano do veiculo -- formato: aaaa --\n");
+        scanf("%d", ano);
+
+        if(tipo == 1){
+            for(i = 0; i < TOT_VEICULOS; i++){
+                if (ano == veiculo[i].ano_fabricacao){
+                    imprime_veiculo(i);
+                    count++;
+                }
+            }
+
+        } else if(tipo == 2){
+            for(i = 0; i < TOT_VEICULOS; i++){
+                if (ano < veiculo[i].ano_fabricacao){
+                    imprime_veiculo(i);
+                    count++;
+                }
+            }
+        }
+
+
+        if(count == 0){
+            printf("Não foi encontrado o ano desejado...");
+        } 
+
+        voltar_ao_menu(aceitar); //teste
+    }    
+        
+}
+
+void imprime_lista_veiculo_modelo(){
+    int i = 0;
+    int count = 0;
+	
+    if(vagas_livres == TOT_VEICULOS){
+        printf("\n-------------------------------------------\n");
+        printf("-------TODAS AS VAGAS ESTAO LIVRES---------\n");
+        printf("-------------------------------------------\n");
+        printf("\n");
+        voltar_ao_menu(aceitar); //teste
+    } else {
+       
+       //mostra o ano de cada veículo para que o usuario possa escolher qual ano desejado...
+        printf("\n VEICULOS DISPONIVEIS PARA LISTAR\n");
+        printf("|");
+        for(int i = 0; i < TOT_VEICULOS; i++){
+            if(veiculo[i].modelo != NULL){ //diferente de zero pois null indica que nenhum foi cadastrado.
+                printf("  %d  |", veiculo[i].modelo);
+            }
+        }
+        printf("\n");
+
+        printf("\ndigite o modelo do veiculo:\n");
+        scanf("%d", modelo);
+
+        for(i = 0; i < TOT_VEICULOS; i++){
+            if (modelo == veiculo[i].modelo){
+                imprime_veiculo(i);
+                count++;
+            }
+        }
+
+        if(count == 0){
+            printf("Não foi encontrado o modelo desejado...");
+        } 
+
+        voltar_ao_menu(aceitar); //teste
+    }    
+        
 }
